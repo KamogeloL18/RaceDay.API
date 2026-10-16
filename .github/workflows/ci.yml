@@ -1,0 +1,35 @@
+name: CI/CD Pipeline - Part 2
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET 8
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore API
+      run: dotnet restore RaceDay.API/RaceDay.API.csproj
+
+    - name: Restore Tests
+      run: dotnet restore RaceDay.Tests/RaceDay.Tests.csproj
+
+    - name: Build API
+      run: dotnet build RaceDay.API/RaceDay.API.csproj --no-restore --configuration Release
+
+    - name: Build Tests
+      run: dotnet build RaceDay.Tests/RaceDay.Tests.csproj --no-restore --configuration Release
+
+    - name: Run tests
+      run: dotnet test RaceDay.Tests/RaceDay.Tests.csproj --no-build --configuration Release --verbosity normal
