@@ -75,11 +75,11 @@ RaceDay-API/
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/KamogeloL18/RaceDay-API.git
+   git clone https://github.com/KamogeloL18/RaceDay.API.git
    cd RaceDay-API
    ## CI/CD Status
 
-![CI/CD Build](https://github.com/KamogeloL18/RaceDay-API/actions/workflows/ci.yml/badge.svg)
+![CI/CD Build](https://github.com/KamogeloL18/RaceDay.API/actions/workflows/ci.yml/badge.svg)
 
 ### Successful Build
 
