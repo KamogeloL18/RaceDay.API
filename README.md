@@ -77,3 +77,20 @@ RaceDay-API/
    ```bash
    git clone https://github.com/KamogeloL18/RaceDay-API.git
    cd RaceDay-API
+   ## CI/CD Status
+
+![CI/CD Build](https://github.com/Kamogelo18/RaceDay-API/actions/workflows/ci.yml/badge.svg)
+
+### Successful Build
+
+![CI/CD Success](ci-success.png)
+
+## Video Presentation
+
+[Watch the Part 2 walkthrough](https://youtu.be/YOUR-VIDEO-LINK)
+
+## Testing
+
+Run all tests:
+```bash
+dotnet test
