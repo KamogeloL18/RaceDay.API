@@ -79,8 +79,7 @@ RaceDay-API/
    cd RaceDay-API
    ## CI/CD Status
 
-![CI/CD Build](https://github.com/KamogeloL
-18/RaceDay-API/actions/workflows/ci.yml/badge.svg)
+![CI/CD Build](https://github.com/KamogeloL18/RaceDay-API/actions/workflows/ci.yml/badge.svg)
 
 ### Successful Build
 
