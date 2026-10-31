@@ -1,0 +1,87 @@
+﻿@model RaceDay.Web.Models.ProfileDto
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success border-0 shadow-sm"><i class="bi bi-check-circle-fill"></i> @TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger border-0 shadow-sm"><i class="bi bi-exclamation-triangle-fill"></i> @TempData["ErrorMessage"]</div>
+}
+
+@if (Model == null)
+{
+    <div class="alert alert-warning">Unable to load profile data. Please try again.</div>
+    return;
+}
+
+<div class="row justify-content-center mt-4 mb-5">
+    <div class="col-md-8">
+        <div class="card card-custom p-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold mb-0" style="color: #1E293B;">My Profile</h2>
+                <span class="badge fs-6" style="background-color: #FF5722; color: white;">@Model.Role</span>
+            </div>
+
+            <form asp-action="Update" method="post">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold text-muted">Email (Read-Only)</label>
+                        <input value="@Model.Email" class="form-control" readonly style="background-color: #F4F7F6;" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold text-muted">Full Name</label>
+                        <input name="FullName" value="@Model.FullName" class="form-control" required />
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold text-muted">Phone Number</label>
+                    <input name="PhoneNumber" value="@Model.PhoneNumber" class="form-control" />
+                </div>
+
+                @if (Model.Role == "Participant")
+                {
+                    <h5 class="fw-bold border-bottom pb-2 mb-3" style="color: #FF5722;">Participant Details</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted">Date of Birth</label>
+                            <input name="DateOfBirth" type="date" value="@Model.DateOfBirth?.ToString("yyyy-MM-dd")" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted">Gender</label>
+                            <select name="Gender" class="form-select">
+                                <option value="Male" selected="@(Model.Gender == "Male")">Male</option>
+                                <option value="Female" selected="@(Model.Gender == "Female")">Female</option>
+                                <option value="Other" selected="@(Model.Gender == "Other")">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-muted">Emergency Contact</label>
+                        <input name="EmergencyContact" value="@Model.EmergencyContact" class="form-control" placeholder="Name & Number" />
+                    </div>
+                }
+                else if (Model.Role == "Organiser")
+                {
+                    <h5 class="fw-bold border-bottom pb-2 mb-3" style="color: #FF5722;">Organiser Details</h5>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted">Company Name</label>
+                            <input name="CompanyName" value="@Model.CompanyName" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted">Organisation Phone</label>
+                            <input name="OrganisationPhoneNumber" value="@Model.OrganisationPhoneNumber" class="form-control" />
+                        </div>
+                    </div>
+                }
+
+                <button type="submit" class="btn btn-primary-custom btn-lg w-100 fw-bold">Save Changes</button>
+            </form>
+        </div>
+    </div>
+</div>

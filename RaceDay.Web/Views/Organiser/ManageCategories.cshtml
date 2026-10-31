@@ -1,0 +1,78 @@
+﻿@model IEnumerable<RaceDay.Web.Models.CategoryDto>
+@{
+    ViewData["Title"] = "Manage Categories";
+    int eventId = ViewBag.EventId;
+}
+
+<div class="mb-4 mt-3">
+    <a asp-action="Dashboard" class="btn btn-outline-secondary btn-sm mb-3"><i class="bi bi-arrow-left"></i> Back to Dashboard</a>
+    <h2 class="fw-bold" style="color: #1E293B;">Categories for: <span style="color: #FF5722;">@ViewBag.EventName</span></h2>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success border-0 shadow-sm">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger border-0 shadow-sm">@TempData["ErrorMessage"]</div>
+}
+
+<div class="row">
+    <!-- Left Side: Add New Category -->
+    <div class="col-md-4 mb-4">
+        <div class="card card-custom p-4">
+            <h5 class="fw-bold mb-4" style="color: #1E293B;">Add New Category</h5>
+            <form asp-action="AddCategory" method="post">
+                <input type="hidden" name="eventId" value="@eventId" />
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold text-muted">Category Name</label>
+                    <input name="Name" class="form-control" required placeholder="e.g. Senior Men" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold text-muted">Entry Fee (R)</label>
+                    <input name="EntryFee" type="number" step="0.01" class="form-control" placeholder="0.00" />
+                </div>
+                <div class="row mb-4">
+                    <div class="col-6">
+                        <label class="form-label fw-bold text-muted">Min Age</label>
+                        <input name="MinAge" type="number" class="form-control" />
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label fw-bold text-muted">Max Age</label>
+                        <input name="MaxAge" type="number" class="form-control" />
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary-custom w-100">Add Category</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Right Side: Existing Categories -->
+    <div class="col-md-8">
+        <h5 class="fw-bold mb-4" style="color: #1E293B;">Existing Categories</h5>
+        @if (!Model.Any())
+        {
+            <div class="card card-custom p-5 text-center">
+                <p class="mb-0 text-muted">No categories added yet.</p>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                @foreach (var cat in Model)
+                {
+                    <div class="col-md-6 mb-3">
+                        <div class="card card-custom p-4 h-100">
+                            <h5 class="fw-bold" style="color: #FF5722;">@cat.Name</h5>
+                            <p class="mb-2 text-muted"><strong>Fee:</strong> R @cat.EntryFee?.ToString("0.00")</p>
+                            <p class="mb-0 text-muted"><strong>Age:</strong> @(cat.MinAge.HasValue ? $"{cat.MinAge} - {cat.MaxAge}" : "Open")</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

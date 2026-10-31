@@ -1,0 +1,62 @@
+﻿@model IEnumerable<RaceDay.Web.Models.ParticipantEnrolmentDto>
+@{
+    ViewData["Title"] = "My Events";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 mt-3">
+    <h2 class="fw-bold" style="color: #1E293B;">My Events</h2>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">Browse More Events</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="card card-custom p-5 text-center">
+        <h4 class="text-muted mb-3">You haven't entered any events yet.</h4>
+        <div>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary-custom">Find a Race</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        @foreach (var enrolment in Model)
+        {
+            <div class="col-12 mb-3">
+                <div class="card card-custom p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <!-- Notice we use enrolment.Event.Name now -->
+                            <h4 class="fw-bold mb-1" style="color: #1E293B;">@enrolment.Event?.Name</h4>
+                            <p class="text-muted mb-0">
+                                <i class="bi bi-calendar-event"></i> @enrolment.Event?.EventDate.ToString("dd MMM yyyy") |
+                                <i class="bi bi-tag-fill"></i> @enrolment.Category?.Name
+                            </p>
+                        </div>
+                        <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                            @if (enrolment.Status == "Confirmed" || enrolment.Status == "Completed")
+                            {
+                                <span class="badge-confirmed me-2"><i class="bi bi-check-circle-fill"></i> @enrolment.Status</span>
+                            }
+                            else
+                            {
+                                <span class="badge-pending me-2"><i class="bi bi-clock-fill"></i> @enrolment.Status</span>
+                            }
+
+                            @if (enrolment.PaymentStatus == "Paid")
+                            {
+                                <span class="badge bg-success me-2">Paid</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark me-2">Unpaid</span>
+                            }
+
+                            <a asp-controller="Event" asp-action="Details" asp-route-id="@enrolment.EventID" class="btn btn-primary-custom btn-sm ms-2">View Event</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
