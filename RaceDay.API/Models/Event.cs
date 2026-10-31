@@ -46,7 +46,7 @@ namespace RaceDay.API.Models
         [JsonIgnore]
         public Organiser? Organiser { get; set; }
 
-        [JsonIgnore]
+      
         public ICollection<Category> Categories { get; set; } = new List<Category>();
         [JsonIgnore] 
         public ICollection<Enrolment> Enrolments { get; set; } = new List<Enrolment>();
