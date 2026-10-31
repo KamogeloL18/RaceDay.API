@@ -16,8 +16,8 @@ namespace RaceDay.API.Controllers
             _context = context;
         }
 
-        // GET: api/events/{eventId}/category
-        [HttpGet("events/{eventId}/category")]
+        // GET: api/events/{eventId}/categories
+        [HttpGet("events/{eventId}/categories")]
         public async Task<IActionResult> GetCategories(int eventId)
         {
             var eventItem = await _context.Events.FindAsync(eventId);
@@ -33,8 +33,8 @@ namespace RaceDay.API.Controllers
             return Ok(categories);
         }
 
-        // POST: api/events/{eventId}/category
-        [HttpPost("events/{eventId}/category")]
+        // POST: api/events/{eventId}/categories
+        [HttpPost("events/{eventId}/categories")]
         public async Task<IActionResult> CreateCategory(int eventId, [FromBody] CreateCategoryRequest request)
         {
             var userId = HttpContext.Session.GetInt32("UserID");
