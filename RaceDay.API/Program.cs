@@ -24,6 +24,7 @@ builder.Services.AddSession(options =>
 // Add HttpContextAccessor (to access session in controllers)
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddScoped<RaceDay.API.Services.IBlobService, RaceDay.API.Services.BlobService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
@@ -38,4 +39,20 @@ app.UseSession();
 app.UseAuthorization();
 app.MapControllers();
 
+// AUTOMATICALLY CREATE THE DATABASE ON STARTUP
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    try
+    {
+        // This applies any pending migrations and creates the DB if it doesn't exist
+        dbContext.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Could not migrate the database: {ex.Message}");
+    }
+}
+
+app.Run();
 app.Run();
