@@ -1,96 +1,80 @@
-# RaceDay API - Programming 2B POE Part 2
+# RaceDay Event Management System - POE Parts 1-3
 
-A RESTful API for the RaceDay Event Management System, built with ASP.NET Core Web API and Entity Framework Core.
+A full-stack web-based event management system for the South African road running, walking, and cycling community. Built with ASP.NET Core Web API, Entity Framework Core, ASP.NET Core MVC, Azure Blob Storage, and Docker.
 
 ## System Overview
 
-RaceDay is a full-stack web-based event management system designed for the South African road running, walking, and cycling community. The platform allows Event Organisers to create and manage events, categories, and participant results, while Participants can browse upcoming events, enrol, and track their personal performance history.
+RaceDay allows Event Organisers to create and manage events, categories, and participant results, while Participants can browse upcoming events, enrol, and track their personal performance history.
 
 ## User Roles
 
 | Role | Capabilities |
 |------|--------------|
-| **Organiser** | Create, update, and delete events; manage categories; view enrolments; capture participant results |
-| **Participant** | Browse events; enrol in events; view own enrolments; track personal results |
+| **Organiser** | Create, update, delete events; manage categories; view enrolments; capture results; upload event banners |
+| **Participant** | Browse events; enrol in events; view own enrolments and results; update profile |
 
 ## Tech Stack
 
-- **Framework:** ASP.NET Core Web API (.NET 8)
-- **Database:** SQL Server with Entity Framework Core (Code-First)
-- **Authentication:** Session-based authentication with BCrypt password hashing
-- **API Documentation:** Swagger / OpenAPI
-- **Testing:** xUnit with EF Core InMemory database
-- **CI/CD:** GitHub Actions
+- **Backend:** ASP.NET Core Web API (.NET 9)
+- **Frontend:** ASP.NET Core MVC (.NET 9)
+- **Database:** SQL Server with Entity Framework Core
+- **Authentication:** Session-based with BCrypt password hashing
+- **Cloud Storage:** Azure Blob Storage (for event banners)
+- **API Docs:** Swagger/OpenAPI
+- **Testing:** xUnit
+- **DevOps:** Docker, GitHub Actions CI/CD
 
 ## Project Structure
-RaceDay-API/
-├── .github/workflows/ci.yml # GitHub Actions CI pipeline
-├── .gitignore # Git ignore file
-├── README.md # This file
-├── ci-success.png # CI/CD success screenshot
-│
-├── RaceDay.API/ # API project
-│ ├── RaceDay.API.csproj
-│ ├── RaceDay.API.sln
-│ ├── Program.cs
-│ ├── appsettings.json
-│ ├── appsettings.Development.json
-│ ├── Controllers/ # API endpoints
-│ │ ├── AuthController.cs
-│ │ ├── ProfileController.cs
-│ │ ├── EventsController.cs
-│ │ ├── CategoriesController.cs
-│ │ ├── EnrolmentsController.cs
-│ │ └── ParticipantsController.cs
-│ ├── Models/ # Entity classes
-│ │ ├── User.cs
-│ │ ├── Participant.cs
-│ │ ├── Organiser.cs
-│ │ ├── Event.cs
-│ │ ├── Category.cs
-│ │ ├── Enrolment.cs
-│ │ └── Result.cs
-│ ├── Data/
-│ │ └── ApplicationDbContext.cs
-│ ├── Migrations/ # EF Core migrations
-│ └── Properties/
-│ └── launchSettings.json
-│
-└── RaceDay.Tests/ # Unit test project
-├── RaceDay.Tests.csproj
-├── TestSession.cs
-├── AuthControllerTests.cs
-├── EventsControllerTests.cs
-└── EnrolmentsControllerTests.cs
 
-## Setup Instructions
+- `RaceDay.API/` - The RESTful Web API and Database Context.
+- `RaceDay.Tests/` - Unit tests for the API.
+- `RaceDay.Web/` - The MVC front-end application.
 
-### Prerequisites
+## Setup Instructions (Local Development)
 
-- Visual Studio 2022
-- .NET 8 SDK
-- SQL Server (LocalDB or full instance)
+### 1. API Setup
+1. Open the solution in Visual Studio 2022.
+2. Ensure the connection string in `RaceDay.API/appsettings.json` points to your local SQL Server.
+3. Open the Package Manager Console (Default project: `RaceDay.API`) and run:
+   ```powershell
+   Update-Database
 
-### Steps
+4.Run the RaceDay.API project (Press F5). Swagger will open.
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/KamogeloL18/RaceDay.API.git
-   cd RaceDay-API
-   ## CI/CD Status
+### 2. MVC Web App Setup
+1. Set RaceDay.Web as the startup project (or configure Multiple Startup Projects).
 
-![CI/CD Build](https://github.com/KamogeloL18/RaceDay.API/actions/workflows/ci.yml/badge.svg)
+2. Run the application (Press F5). It will communicate with the local API.
 
-### Successful Build
+### Docker Setup (Part 3 Requirement)
+The MVC application is fully containerized.
 
-![CI/CD Success](ci-success.png)
+1. Ensure the API is running locally on port 5004 (http://localhost:5004).
 
-## Video Presentation
+2. Open a terminal and navigate to the MVC project folder:
+cd RaceDay.Web
 
-[Watch the Part 2 walkthrough](https://youtu.be/YOUR-VIDEO-LINK)
+3. Build the Docker image:
+docker build -t raceday-web .
 
-## Testing
+4. Run the container, passing the API URL environment variable so the container can reach the host machine:
 
-Run all tests:
-```bash
-dotnet test
+docker run -d -p 8081:8080 -e "ApiSettings__BaseUrl=http://host.docker.internal:5004" --name raceday-mvc raceday-web
+
+5. Access the application at http://localhost:8081.
+
+### Azure Blob Storage
+
+The API is integrated with Azure Blob Storage for uploading event banner images. Images are uploaded via the API and the resulting URL is stored in the database. The connection string is configured in RaceDay.API/appsettings.json.
+
+CI/CD Status
+https://github.com/KamogeloL18/RaceDay.API/actions/workflows/ci.yml/badge.svg
+
+Successful Build
+https://ci-success.png/
+
+Testing
+Run all tests locally:
+
+bash
+dotnet test 
