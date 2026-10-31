@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using RaceDay.API.Controllers;
 using RaceDay.API.Data;
 using RaceDay.API.Models;
+using RaceDay.API.Services; // Added for IBlobService
 using Xunit;
 
 namespace RaceDay.Tests
@@ -20,7 +21,8 @@ namespace RaceDay.Tests
 
         private EventsController GetController(ApplicationDbContext context, int? userId = null, string? role = null)
         {
-            var controller = new EventsController(context);
+            // FIX 1: Use a fake blob service instead of Moq
+            var controller = new EventsController(context, new FakeBlobService());
             var httpContext = new DefaultHttpContext();
 
             // ALWAYS set up a session for testing
@@ -132,6 +134,15 @@ namespace RaceDay.Tests
 
             var statusResult = Assert.IsType<ObjectResult>(result);
             Assert.Equal(403, statusResult.StatusCode);
+        }
+    }
+
+    // FIX 2: Add the fake service class at the bottom of the file
+    public class FakeBlobService : IBlobService
+    {
+        public Task<string> UploadFileAsync(IFormFile file)
+        {
+            return Task.FromResult("https://fakeurl.com/image.jpg");
         }
     }
 }
